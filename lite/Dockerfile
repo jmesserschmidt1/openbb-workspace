@@ -22,8 +22,10 @@ ARG OPENBB_IMAGE_VARIANT=lite
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
-COPY terminalpro/package.json terminalpro/package-lock.json ./
-RUN npm ci
+# terminalpro is managed with Bun (bun.lock); there is no npm lockfile.
+RUN npm install -g bun@1.4.4
+COPY terminalpro/package.json terminalpro/bun.lock ./
+RUN bun install --frozen-lockfile
 
 COPY terminalpro/ ./
 # Keep terminalpro's release version (bumped there on every release) — the
@@ -39,7 +41,7 @@ RUN case "$OPENBB_IMAGE_VARIANT" in \
 RUN cat /tmp/release-version.env >> .env
 # The Lite env selects terminalpro's strict in-repo lock profile; the Full env
 # deliberately leaves frontend runtime configuration unlocked.
-RUN npm run build:runtime
+RUN bun run build:runtime
 
 
 ###############################################

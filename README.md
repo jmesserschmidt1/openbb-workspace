@@ -13,6 +13,18 @@ Source code for OpenBB Workspace and the components that build and run it.
 
 Each component keeps its own README with setup and development instructions.
 
+## Run it locally
+
+With Docker installed (Docker Desktop on Mac/Windows), from the repo root:
+
+```bash
+./run-local.sh          # builds OpenBB Lite from this repo, serves http://localhost:3000
+./run-local.sh --stop   # stops it; data stays in the openbb-data volume
+```
+
+The script prints the admin login when the app is ready. Print it again with
+`docker exec openbb credentials`.
+
 ## Notes
 
 - The `.github/workflows/` files inside each component are kept for reference;

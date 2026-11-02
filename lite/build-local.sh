@@ -129,7 +129,7 @@ if [[ -n "$PLATFORM" ]]; then
   PLATFORM_ARGS=(--platform "$PLATFORM")
 fi
 DOCKER_BUILDKIT=1 docker build --load \
-  "${PLATFORM_ARGS[@]}" \
+  ${PLATFORM_ARGS[@]+"${PLATFORM_ARGS[@]}"} \
   --build-arg "OPENBB_IMAGE_VARIANT=$IMAGE_VARIANT" \
   -f Dockerfile \
   -t "$IMAGE" \

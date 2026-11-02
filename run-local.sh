@@ -16,6 +16,15 @@ IMAGE="${IMAGE:-openbb/lite:dev}"
 NAME="${NAME:-openbb}"
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker is not installed. Install Docker Desktop from https://www.docker.com/products/docker-desktop/ and open it, then run this again." >&2
+  exit 1
+fi
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker is installed but not running. Open Docker Desktop, wait until it says it is running, then run this again." >&2
+  exit 1
+fi
+
 case "${1:-}" in
   --stop)
     docker rm -f "$NAME" >/dev/null 2>&1 || true
@@ -27,7 +36,7 @@ case "${1:-}" in
     IMAGE="$IMAGE" \
       BACKEND_DIR="$ROOT/backend-api" \
       WORKSPACE_DIR="$ROOT/terminalpro" \
-      "$ROOT/lite/build-local.sh" --local
+      "$ROOT/lite/build-local.sh" --local || { echo "Build failed, see the errors above." >&2; exit 1; }
     ;;
   *) echo "Unknown arg: $1" >&2; exit 1 ;;
 esac
